@@ -1,0 +1,433 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ════════════════════════════════════════════════════════════════
+   NAKSHATRA SHARMA — DESIGN SYSTEM
+   Global CSS: custom properties, base resets, typography, utilities
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties ─────────────────────────────────────── */
+:root {
+  /* Color tokens (mirrored from tailwind.config.ts for non-Tailwind CSS) */
+  --c-ink:      #080808;
+  --c-carbon:   #111111;
+  --c-obsidian: #181818;
+  --c-ash:      #222222;
+  --c-wire:     #2C2C2C;
+  --c-smoke:    #404040;
+
+  --c-chalk:    #F0EBE3;
+  --c-pearl:    #C8C0B5;
+  --c-mist:     #8A8278;
+  --c-dim:      #5A5650;
+
+  --c-gold:         #C9A96E;
+  --c-gold-light:   #E2C28E;
+  --c-gold-dark:    #A68848;
+  --c-gold-subtle:  rgba(201, 169, 110, 0.10);
+  --c-gold-glow:    rgba(201, 169, 110, 0.22);
+
+  --c-ember:        #C8391A;
+  --c-ember-light:  #E04B2A;
+  --c-ember-dark:   #A02E14;
+
+  /* Rhythm */
+  --section-py: clamp(4.5rem, 9vw, 9rem);
+  --section-px: clamp(1.25rem, 5vw, 4rem);
+  --container-max: 1200px;
+  --editorial-max: 1440px;
+
+  /* Easing */
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Durations */
+  --dur-instant:  100ms;
+  --dur-fast:     200ms;
+  --dur-base:     300ms;
+  --dur-slow:     500ms;
+  --dur-entrance: 800ms;
+
+  /* Z-index ladder */
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+
+  /* Navbar */
+  --navbar-h: 72px;
+}
+
+/* ── Base Resets ────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    /* Prevent layout shift on scrollbar appear */
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-ink text-chalk font-sans text-body-md;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* Images */
+  img, video {
+    max-width: 100%;
+    display: block;
+  }
+
+  /* Remove list styles when role="list" */
+  ul[role='list'],
+  ol[role='list'] {
+    list-style: none;
+  }
+
+  /* Paragraph spacing */
+  p + p {
+    margin-top: 1em;
+  }
+
+  /* Inputs inherit font */
+  button, input, select, textarea {
+    font: inherit;
+  }
+
+  /* Heading resets */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: inherit;
+    line-height: inherit;
+  }
+
+  /* Anchors */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Text selection — luxury gold tint */
+  ::selection {
+    background-color: rgba(201, 169, 110, 0.22);
+    color: var(--c-chalk);
+  }
+
+  /* Focus ring — gold, not the browser default */
+  :focus-visible {
+    outline: 1.5px solid var(--c-gold);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Thin luxury scrollbar */
+  ::-webkit-scrollbar        { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track  { background: var(--c-carbon); }
+  ::-webkit-scrollbar-thumb  { background: var(--c-wire); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--c-smoke); }
+}
+
+/* ── Typography Utility Classes ─────────────────────────────────── */
+@layer utilities {
+
+  /* ─ Display / Hero headings — always Playfair Display ─ */
+  .t-display-2xl {
+    @apply font-display text-display-2xl font-normal;
+    font-feature-settings: 'liga' 1, 'dlig' 1, 'onum' 1;
+  }
+  .t-display-xl {
+    @apply font-display text-display-xl font-normal;
+    font-feature-settings: 'liga' 1, 'dlig' 1;
+  }
+  .t-display-lg {
+    @apply font-display text-display-lg font-normal;
+  }
+  .t-display-md {
+    @apply font-display text-display-md font-normal;
+  }
+
+  /* ─ Impact / Manifesto headings — Anton all-caps ─ */
+  .t-impact-2xl {
+    @apply font-impact text-display-2xl uppercase;
+    letter-spacing: -0.02em;
+  }
+  .t-impact-xl {
+    @apply font-impact text-display-xl uppercase;
+    letter-spacing: -0.02em;
+  }
+  .t-impact-lg {
+    @apply font-impact text-display-lg uppercase;
+    letter-spacing: -0.015em;
+  }
+
+  /* ─ UI headings — Inter ─ */
+  .t-heading-xl  { @apply font-sans text-heading-xl font-semibold text-chalk; }
+  .t-heading-lg  { @apply font-sans text-heading-lg font-semibold text-chalk; }
+  .t-heading-md  { @apply font-sans text-heading-md font-medium text-chalk; }
+
+  /* ─ Body ─ */
+  .t-body-lg  { @apply font-sans text-body-lg text-pearl leading-relaxed; }
+  .t-body-md  { @apply font-sans text-body-md text-pearl leading-relaxed; }
+  .t-body-sm  { @apply font-sans text-body-sm text-mist; }
+
+  /* ─ Labels ─ */
+  .t-overline {
+    @apply font-sans text-overline uppercase tracking-[0.14em] text-mist font-medium;
+  }
+  .t-caption {
+    @apply font-sans text-caption text-mist;
+  }
+
+  /* ─ Gold text gradient ─ */
+  .t-gold {
+    background: linear-gradient(135deg, #C9A96E 0%, #E2C28E 45%, #A68848 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ─ Ember text (manifesto accent word) ─ */
+  .t-ember {
+    @apply text-ember;
+  }
+
+  /* ── Layout Containers ─────────────────────────────────────── */
+
+  /* Standard content width (1200px) */
+  .container-content {
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--section-px);
+    padding-right: var(--section-px);
+  }
+
+  /* Full editorial width (1440px) */
+  .container-editorial {
+    max-width: var(--editorial-max);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Section vertical rhythm */
+  .section-rhythm {
+    padding-top: var(--section-py);
+    padding-bottom: var(--section-py);
+  }
+
+  /* Full section with rhythm + horizontal padding */
+  .section {
+    padding-top: var(--section-py);
+    padding-bottom: var(--section-py);
+    padding-left: var(--section-px);
+    padding-right: var(--section-px);
+  }
+
+  /* ── Dividers ──────────────────────────────────────────────── */
+
+  .divider {
+    height: 1px;
+    background: var(--c-wire);
+  }
+
+  .divider-fade {
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--c-wire) 20%,
+      var(--c-wire) 80%,
+      transparent 100%
+    );
+  }
+
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(201, 169, 110, 0.5) 50%,
+      transparent 100%
+    );
+  }
+
+  /* ── Glassmorphism card base ───────────────────────────────── */
+  .glass-card {
+    background: rgba(24, 24, 24, 0.7);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border: 1px solid rgba(44, 44, 44, 0.8);
+  }
+
+  /* ── Noise texture overlay ─────────────────────────────────── */
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Gradient scrim (hero photo fade) ─────────────────────── */
+  .scrim-bottom {
+    background: linear-gradient(
+      180deg,
+      rgba(8,8,8,0) 0%,
+      rgba(8,8,8,0.25) 45%,
+      rgba(8,8,8,0.92) 85%,
+      rgba(8,8,8,1) 100%
+    );
+  }
+
+  .scrim-top {
+    background: linear-gradient(
+      0deg,
+      rgba(8,8,8,0) 0%,
+      rgba(8,8,8,0.6) 100%
+    );
+  }
+
+  /* ── Gold ambient glow ─────────────────────────────────────── */
+  .gold-ambient {
+    background: radial-gradient(
+      ellipse 90% 40% at 50% 100%,
+      rgba(201, 169, 110, 0.10) 0%,
+      transparent 100%
+    );
+  }
+
+  /* ── Animation delays (for stagger groups) ─────────────────── */
+  .delay-75  { animation-delay:  75ms; }
+  .delay-100 { animation-delay: 100ms; }
+  .delay-150 { animation-delay: 150ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+  .delay-800 { animation-delay: 800ms; }
+
+  /* ── Hover state helpers ────────────────────────────────────── */
+
+  /* Image zoom on parent hover */
+  .hover-zoom {
+    overflow: hidden;
+  }
+  .hover-zoom img,
+  .hover-zoom video {
+    transition: transform 700ms var(--ease-luxury);
+  }
+  .hover-zoom:hover img,
+  .hover-zoom:hover video {
+    transform: scale(1.04);
+  }
+
+  /* Card lift */
+  .hover-lift {
+    transition: transform 350ms var(--ease-luxury), box-shadow 350ms var(--ease-luxury);
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.7), 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  /* ── Shimmer skeleton loader ────────────────────────────────── */
+  .skeleton {
+    @apply bg-obsidian;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(201,169,110,0.06) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.2s linear infinite;
+  }
+
+  /* ── Star rating ────────────────────────────────────────────── */
+  .star-filled  { color: var(--c-gold); }
+  .star-empty   { color: var(--c-wire); }
+
+  /* ── Custom cursor (optional, enable if desired) ────────────── */
+  /* .custom-cursor { cursor: none; } */
+}
+
+/* ── Component Base Classes ─────────────────────────────────────── */
+@layer components {
+
+  /* ─ Pill / chip ─ */
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full
+           text-caption uppercase tracking-widest font-medium font-sans;
+  }
+
+  /* ─ Stat block ─ */
+  .stat-number {
+    @apply font-impact text-display-lg text-chalk;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    @apply t-overline;
+  }
+
+  /* ─ Service card ─ */
+  .service-card {
+    @apply bg-obsidian border border-wire rounded-lg p-8
+           flex flex-col gap-4
+           transition-all duration-350 ease-luxury;
+  }
+  .service-card:hover {
+    @apply border-gold/30 shadow-card-hover;
+    transform: translateY(-4px);
+  }
+
+  /* ─ Testimonial card ─ */
+  .testimonial-card {
+    @apply bg-obsidian border border-wire rounded-lg p-8
+           shadow-card flex flex-col gap-6;
+    min-width: 340px;
+    max-width: 400px;
+  }
+
+  /* ─ Pricing card ─ */
+  .pricing-card {
+    @apply bg-obsidian border border-wire rounded-xl p-8 flex flex-col gap-6;
+    transition: border-color 350ms var(--ease-luxury), box-shadow 350ms var(--ease-luxury);
+  }
+  .pricing-card:hover {
+    @apply border-gold/40 shadow-gold;
+  }
+  .pricing-card--featured {
+    @apply border-gold/40 shadow-gold;
+    background: linear-gradient(135deg, rgba(201,169,110,0.05) 0%, var(--c-obsidian) 60%);
+  }
+
+  /* ─ FAQ accordion item ─ */
+  .faq-item {
+    @apply border-b border-wire py-6;
+  }
+  .faq-trigger {
+    @apply flex items-center justify-between w-full text-left
+           font-sans text-heading-md text-chalk font-normal
+           transition-colors duration-200;
+  }
+  .faq-trigger:hover {
+    @apply text-gold;
+  }
+}

@@ -8,7 +8,8 @@ import { Camera, ChevronRight, RefreshCw } from 'lucide-react'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { manualShapeResult, SHAPE_ADVICE } from '@/lib/face/classifyShape'
+import { SHAPE_ADVICE } from '@/lib/face/classifyShape'
+import { getRecommendationsByFaceShape } from '@/data/hairstyles'
 import type { FaceShape, Hairstyle } from '@/types'
 
 // ── Face shape SVG icons ───────────────────────────────────────
@@ -64,35 +65,6 @@ const FACE_SHAPES: {
   },
 ]
 
-// ── Placeholder hairstyle data ─────────────────────────────────
-// In production: fetch from Supabase with getHairstylesByFaceShape()
-const HAIRSTYLE_RECOMMENDATIONS: Record<FaceShape, Hairstyle[]> = {
-  oval: [
-    { id:'o1', name:'Blunt Bob', slug:'blunt-bob', description:'Clean, minimal bob at the jaw.', image_urls:['https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80', face_shapes:['oval'], category:'cut', tags:['bob'], is_featured:true, sort_order:1 },
-    { id:'o2', name:'Curtain Bangs', slug:'curtain-bangs', description:'Soft, face-framing fringe.', image_urls:['https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80', face_shapes:['oval','heart'], category:'cut', tags:['bangs'], is_featured:false, sort_order:2 },
-    { id:'o3', name:'Layered Waves', slug:'layered-waves', description:'Soft movement through length.', image_urls:['https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80', face_shapes:['oval','square'], category:'cut', tags:['waves'], is_featured:true, sort_order:3 },
-  ],
-  round: [
-    { id:'r1', name:'Long Layers', slug:'long-layers', description:'Length and movement elongate the face.', image_urls:['https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80', face_shapes:['round'], category:'cut', tags:['layers'], is_featured:true, sort_order:1 },
-    { id:'r2', name:'Side-Swept Bangs', slug:'side-swept-bangs', description:'Diagonal fringe creates angles.', image_urls:['https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80', face_shapes:['round','heart'], category:'cut', tags:['bangs'], is_featured:false, sort_order:2 },
-    { id:'r3', name:'Textured Lob', slug:'textured-lob', description:'Long bob with weight at the ends.', image_urls:['https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80', face_shapes:['round'], category:'cut', tags:['lob'], is_featured:true, sort_order:3 },
-  ],
-  square: [
-    { id:'s1', name:'Soft Waves', slug:'soft-waves', description:'Flowing waves soften strong angles.', image_urls:['https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80', face_shapes:['square'], category:'cut', tags:['waves'], is_featured:true, sort_order:1 },
-    { id:'s2', name:'Side Part Lob', slug:'side-part-lob', description:'Asymmetry breaks the square.', image_urls:['https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80', face_shapes:['square','oval'], category:'cut', tags:['lob'], is_featured:false, sort_order:2 },
-    { id:'s3', name:'Layered Cut', slug:'layered-cut', description:'Movement and texture around the jaw.', image_urls:['https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80', face_shapes:['square'], category:'cut', tags:['layers'], is_featured:true, sort_order:3 },
-  ],
-  heart: [
-    { id:'h1', name:'Chin-Length Bob', slug:'chin-bob', description:'Width at the jaw balances a wide forehead.', image_urls:['https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80', face_shapes:['heart'], category:'cut', tags:['bob'], is_featured:true, sort_order:1 },
-    { id:'h2', name:'Curtain Bangs', slug:'curtain-bangs-heart', description:'Soften the forehead width.', image_urls:['https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80', face_shapes:['heart','oval'], category:'cut', tags:['bangs'], is_featured:false, sort_order:2 },
-    { id:'h3', name:'Full Waves Below Chin', slug:'full-waves', description:'Volume below the chin adds balance.', image_urls:['https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80', face_shapes:['heart'], category:'cut', tags:['waves'], is_featured:true, sort_order:3 },
-  ],
-  oblong: [
-    { id:'ob1', name:'Blunt Fringe', slug:'blunt-fringe', description:'A fringe breaks up vertical length.', image_urls:['https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400&q=80', face_shapes:['oblong'], category:'cut', tags:['fringe'], is_featured:true, sort_order:1 },
-    { id:'ob2', name:'Volume Bob', slug:'volume-bob', description:'Width at the sides shortens the face.', image_urls:['https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&q=80', face_shapes:['oblong'], category:'cut', tags:['bob'], is_featured:false, sort_order:2 },
-    { id:'ob3', name:'Shoulder Waves', slug:'shoulder-waves', description:'Side volume at shoulder length.', image_urls:['https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80'], thumbnail:'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=400&q=80', face_shapes:['oblong'], category:'cut', tags:['waves'], is_featured:true, sort_order:3 },
-  ],
-}
 
 // ── Main component ─────────────────────────────────────────────
 export function FaceShapeToolSection() {
@@ -101,7 +73,7 @@ export function FaceShapeToolSection() {
   const [selected, setSelected] = useState<FaceShape | null>(null)
 
   const advice    = selected ? SHAPE_ADVICE[selected] : null
-  const hairstyles = selected ? HAIRSTYLE_RECOMMENDATIONS[selected] : []
+  const hairstyles = selected ? getRecommendationsByFaceShape(selected) : []
 
   return (
     <section
@@ -201,7 +173,7 @@ export function FaceShapeToolSection() {
 
               {/* Recommendations grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {hairstyles.map((hairstyle, i) => (
+                {hairstyles.map((hairstyle: Hairstyle, i: number) => (
                   <RecommendationCard key={hairstyle.id} hairstyle={hairstyle} index={i} />
                 ))}
               </div>

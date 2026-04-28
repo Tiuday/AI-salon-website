@@ -9,8 +9,8 @@ import { ContentHubSection }      from '@/components/sections/ContentHubSection'
 import { ContactSection }         from '@/components/sections/ContactSection'
 import { VoiceAssistantSection }  from '@/components/sections/VoiceAssistantSection'
 
-// Optionally fetch live data for sections that need it
-// import { getFeaturedServices, getPublishedTestimonials, getAllFaq } from '@/lib/supabase/queries'
+// Optionally fetch live data once Appwrite is configured
+// import { getFeaturedServices, getPublishedTestimonials, getAllFaq } from '@/lib/appwrite/queries'
 
 export const metadata: Metadata = {
   title: 'Nakshatra Sharma — Luxury Hair Salon',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  // Uncomment to connect to live Supabase data:
+  // Uncomment once Appwrite is configured:
   // const [services, testimonials, faq] = await Promise.all([
   //   getFeaturedServices(),
   //   getPublishedTestimonials(),
